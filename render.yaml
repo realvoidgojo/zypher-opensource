@@ -2,13 +2,11 @@ services:
   - type: web
     name: zypher-ml-service
     env: python
+    rootDir: python-ml-service
     buildCommand: |
-      cd python-ml-service
       pip install --upgrade pip
       pip install -r requirements.txt
-    startCommand: |
-      cd python-ml-service
-      gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:$PORT
+    startCommand: gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:$PORT
     envVars:
       - key: API_KEY
         sync: false # OpenWeatherMap Key
