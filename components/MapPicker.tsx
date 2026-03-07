@@ -8,16 +8,16 @@ const customIcon = new L.Icon({
   iconSize: [25, 41], iconAnchor: [12, 41]
 });
 
-export default function MapPicker({ position, setPosition }: { position: [number, number], setPosition: (p: [number, number]) => void }) {
+export default function MapPicker({ position, setPosition }: { position: [number, number] | null, setPosition: (p: [number, number]) => void }) {
   function LocationMarker() {
     useMapEvents({ click(e) { setPosition([e.latlng.lat, e.latlng.lng]) } })
     return position === null ? null : <Marker position={position} icon={customIcon} />
   }
 
   return (
-    <div className="h-64 w-full rounded-lg overflow-hidden border-2 border-gray-200 z-0 relative text-black">
-      <MapContainer center={position} zoom={10} className="h-full w-full">
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+    <div className="h-full w-full min-h-[350px] overflow-hidden z-0 relative text-black bg-[#0f1423] rounded-xl border border-white/5">
+      <MapContainer center={position || [20.5937, 78.9629]} zoom={position ? 10 : 4} className="h-full w-full" style={{ background: '#0f1423' }}>
+        <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
         <LocationMarker />
       </MapContainer>
     </div>
