@@ -51,7 +51,7 @@ export default function AlertsPanel({ shipments, runRealTimeAI }: { shipments: a
   }
 
   return (
-    <div className="bg-[#0f1423] p-8 rounded-[2rem] border border-white/5 h-[450px] flex flex-col relative overflow-hidden">
+    <div className="bg-[#0f1423] p-8 rounded-4xl border border-white/5 h-[450px] flex flex-col relative overflow-hidden">
       <div className="flex justify-between items-center mb-6 relative z-10">
         <div className="flex items-center gap-3">
           {Icons.Radar}
@@ -70,8 +70,8 @@ export default function AlertsPanel({ shipments, runRealTimeAI }: { shipments: a
           </div>
         ) : alerts.map((alert) => (
           <div key={alert.id} className={`p-5 rounded-2xl border transition-all duration-300 bg-[#161b2a] hover:bg-[#1a2133] ${alert.type === "critical"
-              ? "border-rose-500/30 hover:border-rose-500/60 shadow-[inset_0_0_20px_rgba(244,63,94,0.05)]"
-              : "border-white/5 hover:border-white/10"
+            ? "border-rose-500/30 hover:border-rose-500/60 shadow-[inset_0_0_20px_rgba(244,63,94,0.05)]"
+            : "border-white/5 hover:border-white/10"
             }`}>
 
             <div className="flex justify-between items-start mb-3">

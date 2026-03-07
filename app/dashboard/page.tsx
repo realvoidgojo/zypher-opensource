@@ -67,13 +67,13 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="space-y-8 animate-pulse">
-        <div className="bg-[#0f1423] p-8 lg:p-10 rounded-[2rem] border border-white/5 h-48 w-full shadow-2xl">
+        <div className="bg-[#0f1423] p-8 lg:p-10 rounded-4xl border border-white/5 h-48 w-full shadow-2xl">
           <div className="h-4 bg-white/10 rounded w-1/4 mb-4"></div>
           <div className="h-10 bg-white/10 rounded w-1/2"></div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-40 rounded-[1.5rem] bg-[#0f1423] border border-white/5 p-6 flex flex-col justify-between">
+            <div key={i} className="h-40 rounded-3xl bg-[#0f1423] border border-white/5 p-6 flex flex-col justify-between">
               <div className="h-4 bg-white/10 rounded w-1/2"></div>
               <div className="h-10 bg-white/10 rounded w-1/3"></div>
             </div>
@@ -90,7 +90,7 @@ export default function DashboardPage() {
             </div>
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="h-28 bg-[#161b2a] rounded-[1.5rem] border border-white/5"></div>
+                <div key={i} className="h-28 bg-[#161b2a] rounded-3xl border border-white/5"></div>
               ))}
             </div>
           </div>
@@ -102,7 +102,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8 animate-fade-in-up">
       {/* HEADER SECTION */}
-      <div className="bg-[#0f1423] p-8 lg:p-10 rounded-[2rem] border border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-2xl relative overflow-hidden">
+      <div className="bg-[#0f1423] p-8 lg:p-10 rounded-4xl border border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-2xl relative overflow-hidden">
         <div className="absolute -top-24 -right-24 w-64 h-64 bg-cyan-900/20 blur-[80px] pointer-events-none rounded-full"></div>
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-3">
@@ -113,7 +113,7 @@ export default function DashboardPage() {
           <p className="text-slate-400 font-medium mt-2 tracking-wide text-sm">Autonomous tracking & supply chain intelligence.</p>
         </div>
         <div className="hidden lg:block text-right relative z-10">
-          <p className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-b from-slate-100 to-slate-500 tracking-tighter">ZYPHER</p>
+          <p className="text-4xl font-black bg-clip-text text-transparent bg-linear-to-b from-slate-100 to-slate-500 tracking-tighter">ZYPHER</p>
           <p className="text-[10px] font-black text-cyan-500/80 uppercase tracking-[0.4em] mt-1">Team Roarz</p>
         </div>
       </div>
