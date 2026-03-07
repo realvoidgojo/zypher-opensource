@@ -113,7 +113,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <div className="p-6 border-t border-white/5 relative z-10 bg-[#05080f]">
                     <div className="flex justify-between items-center mb-6 px-2">
                         <span className="text-[9px] text-slate-600 font-black uppercase tracking-widest">Built by</span>
-                        <span className="text-[10px] text-slate-300 font-black uppercase tracking-widest">RoarX</span>
+                        <span className="text-[10px] text-slate-300 font-black uppercase tracking-widest">Roarz</span>
                     </div>
                     <button onClick={handleLogout} className="w-full flex items-center justify-center gap-3 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 p-3 rounded-xl transition-all duration-300 font-bold text-xs border border-rose-500/10 group">
                       <span className="text-rose-500/70 group-hover:text-rose-400">{Icons.Logout}</span> Terminate Session

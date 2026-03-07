@@ -15,7 +15,7 @@ export default function SuppliersPage() {
           </div>
           <h1 className="text-4xl font-light text-white tracking-tight">Supplier Management</h1>
           <p className="text-slate-400 font-medium mt-2 tracking-wide text-sm max-w-3xl leading-relaxed">
-            Track and analyze the performance of your logistics partners. Suppliers with a reliability score below 70% are automatically flagged as high risk by the RoarX Bayesian Engine to prevent downstream supply chain disruptions.
+            Track and analyze the performance of your logistics partners. Suppliers with a reliability score below 70% are automatically flagged as high risk by the Roarz Bayesian Engine to prevent downstream supply chain disruptions.
           </p>
         </div>
       </div>

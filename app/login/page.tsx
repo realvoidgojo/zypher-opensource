@@ -140,7 +140,7 @@ export default function LoginPage() {
 
         <div className="mt-10 pt-6 border-t border-white/5 text-center">
             <p className="text-[9px] text-slate-600 font-black uppercase tracking-widest">
-                Engineered by <span className="text-cyan-500/70">Team RoarX</span>
+                Engineered by <span className="text-cyan-500/70">Team Roarz</span>
             </p>
         </div>
       </div>
