@@ -5,7 +5,7 @@ TRUNCATE TABLE shipments, inventory, warehouses, products, suppliers RESTART IDE
 INSERT INTO suppliers (id, owner_id, name, email, password, reliability_score) VALUES
   ('11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', 'Zypher Global Logistics', 'operator@zypher.network', 'pass123', 0.98),
   ('22222222-2222-2222-2222-222222222222', '22222222-2222-2222-2222-222222222222', 'Alpha Suppliers Ltd.', 'alpha@supplier.com', 'pass123', 0.92),
-  ('33333333-3333-3333-3333-333333333333', '33333333-3333-3333-3333-333333333333', 'Beta Manufacturing', 'beta@supplier.com', 'pass123', 0.85);
+  ('33333333-3333-3333-3333-333333333333', '33333333-3333-3333-3333-333333333333', 'Beta Manufacturing', 'beta@b2b.com', 'pass123', 0.85);
 
 -- Insert Sample Products
 INSERT INTO products (id, owner_id, name, category) VALUES

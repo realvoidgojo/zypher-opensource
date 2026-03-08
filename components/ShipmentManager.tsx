@@ -1,5 +1,6 @@
 "use client"
 import React, { useEffect, useState } from "react"
+import { createPortal } from "react-dom"
 import { supabase } from "@/services/supabaseClient"
 import dynamic from 'next/dynamic'
 import { getRoute } from "@/services/routingService"
@@ -63,6 +64,7 @@ export default function ShipmentManager() {
 
   const [previewData, setPreviewData] = useState<{ distance: string, duration: string, profit: string, weather: string } | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [mapFullscreen, setMapFullscreen] = useState(false)
 
   const supplierId = typeof window !== 'undefined' ? localStorage.getItem("supplier_id") : null
 
@@ -197,59 +199,96 @@ export default function ShipmentManager() {
   }
 
   return (
-    <div className="bg-[#0f1423] shadow-2xl rounded-[3rem] p-10 border border-cyan-500/10 text-slate-200 mt-10 relative overflow-hidden">
-      <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-cyan-900/10 blur-[100px] pointer-events-none rounded-full"></div>
-
+    <div className="bg-[#111827] shadow-sm rounded-[3rem] p-10 border border-[#1F2937] text-slate-200 mt-10 relative overflow-hidden">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-10 relative z-10">
         <div>
-          <h2 className="text-3xl font-light text-white tracking-tight">Dispatch Control</h2>
-          <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em] mt-2">Manual Override & Mission Creation</p>
+          <h2 className="text-xl font-medium text-[#F9FAFB]">Shipment Control</h2>
+          <p className="text-sm font-medium text-[#9CA3AF] mt-1">Create and manage your outgoing shipments.</p>
         </div>
-        <button onClick={() => setShowForm(!showForm)} className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest transition-all duration-300 shadow-lg active:scale-95 ${showForm ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-cyan-600 hover:bg-cyan-500 text-[#05080f]'}`}>
-          {showForm ? Icons.Close : Icons.Plus} {showForm ? "Abort Mission" : "New Dispatch"}
+        <button onClick={() => setShowForm(!showForm)} className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 shadow-sm active:scale-95 border ${showForm ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' : 'bg-[#1F2937] text-white hover:bg-[#374151] border-[#374151]'}`}>
+          {showForm ? Icons.Close : Icons.Plus} {showForm ? "Cancel" : "New Shipment"}
         </button>
       </div>
 
       {showForm && (
-        <div className="bg-[#161b2a] rounded-4xl p-8 mb-12 border border-white/5 animate-fade-in-up relative z-10 shadow-inner">
-          <div className="flex bg-[#0f1423] p-1.5 rounded-2xl border border-white/5 mb-8 max-w-md mx-auto">
-            <button onClick={() => setDispatchType('network')} className={`flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-2 ${dispatchType === 'network' ? 'bg-cyan-500/20 text-cyan-400 shadow-sm border border-cyan-500/30' : 'text-slate-500 hover:text-slate-300'}`}>{Icons.Network} Network Node</button>
-            <button onClick={() => setDispatchType('external')} className={`flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-2 ${dispatchType === 'external' ? 'bg-indigo-500/20 text-indigo-400 shadow-sm border border-indigo-500/30' : 'text-slate-500 hover:text-slate-300'}`}>{Icons.External} 3rd Party</button>
+        <div className="bg-[#111827] rounded-3xl p-8 mb-12 border border-[#1F2937] animate-fade-in-up relative z-10 shadow-sm">
+          <div className="flex bg-[#111827] p-1 rounded-xl border border-[#1F2937] mb-8 max-w-md mx-auto">
+            <button onClick={() => setDispatchType('network')} className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2 ${dispatchType === 'network' ? 'bg-[#3B82F6] text-white shadow-sm border border-[#3B82F6]' : 'text-[#9CA3AF] hover:text-[#F9FAFB]'}`}>{Icons.Network} Network Partner</button>
+            <button onClick={() => setDispatchType('external')} className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2 ${dispatchType === 'external' ? 'bg-[#3B82F6] text-white shadow-sm border border-[#3B82F6]' : 'text-[#9CA3AF] hover:text-[#F9FAFB]'}`}>{Icons.External} 3rd Party</button>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="space-y-5">
               <div className="grid grid-cols-3 gap-4">
                 <div className="col-span-2 space-y-1.5">
-                  <label className="text-[9px] font-bold text-cyan-500 uppercase tracking-widest ml-1">Payload Source</label>
-                  <select value={selectedInvId} onChange={(e) => setSelectedInvId(e.target.value)} className="w-full p-4 bg-[#0f1423] border border-white/5 rounded-xl text-white outline-none focus:border-cyan-500/50 transition-all text-sm font-medium appearance-none">
-                    <option value="">-- Select Local Asset --</option>
+                  <label className="text-xs font-semibold text-[#9CA3AF] ml-1">Product Source</label>
+                  <select value={selectedInvId} onChange={(e) => setSelectedInvId(e.target.value)} className="w-full p-3 bg-[#111827] border border-[#1F2937] rounded-xl text-white outline-none focus:border-[#3B82F6] transition-all text-sm font-medium appearance-none">
+                    <option value="">-- Select Local Product --</option>
                     {myInventory.map(i => <option key={i.id} value={i.id}>{i.products?.name} (Qty: {i.stock_quantity})</option>)}
                   </select>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-cyan-500 uppercase tracking-widest ml-1">Volume</label>
-                  <input type="number" min="1" value={dispatchQty} onChange={(e) => setDispatchQty(parseInt(e.target.value) || 1)} className="w-full p-4 bg-[#0f1423] border border-white/5 rounded-xl text-white focus:border-cyan-500/50 outline-none text-sm font-medium" />
+                  <label className="text-xs font-semibold text-[#9CA3AF] ml-1">Quantity</label>
+                  <input type="number" min="1" value={dispatchQty} onChange={(e) => setDispatchQty(parseInt(e.target.value) || 1)} className="w-full p-3 bg-[#111827] border border-[#1F2937] rounded-xl text-white focus:border-[#3B82F6] outline-none text-sm font-medium" />
                 </div>
               </div>
 
               {dispatchType === 'network' ? (
-                <div className="space-y-4 p-5 rounded-2xl bg-[#0f1423]/50 border border-cyan-500/20">
-                  <div className="space-y-1.5"><label className="text-[9px] font-bold text-cyan-400 uppercase tracking-widest ml-1">Target Supplier</label><select value={selectedNetSupplier} onChange={(e) => setSelectedNetSupplier(e.target.value)} className="w-full p-4 bg-[#0f1423] border border-white/5 rounded-xl text-white outline-none focus:border-cyan-500/50 text-sm font-medium appearance-none"><option value="">-- Select Partner --</option>{networkSuppliers.map(s => <option key={s.owner_id} value={s.owner_id}>{s.name}</option>)}</select></div>
-                  <div className="space-y-1.5"><label className="text-[9px] font-bold text-cyan-400 uppercase tracking-widest ml-1">Target Node</label><select value={selectedTargetWarehouse} onChange={(e) => setSelectedTargetWarehouse(e.target.value)} disabled={!selectedNetSupplier} className="w-full p-4 bg-[#0f1423] border border-white/5 rounded-xl text-white outline-none focus:border-cyan-500/50 text-sm font-medium appearance-none disabled:opacity-50"><option value="">-- Select Hub --</option>{supplierWarehouses.map(w => <option key={w.id} value={w.id}>{w.name}</option>)}</select></div>
+                <div className="space-y-4 p-5 rounded-xl bg-[#111827] border border-[#1F2937]">
+                  <div className="space-y-1.5"><label className="text-xs font-semibold text-[#3B82F6] ml-1">Target Supplier</label><select value={selectedNetSupplier} onChange={(e) => setSelectedNetSupplier(e.target.value)} className="w-full p-3 bg-[#1F2937] border border-[#374151] rounded-lg text-white outline-none focus:border-[#3B82F6] text-sm font-medium appearance-none"><option value="">-- Select Partner --</option>{networkSuppliers.map(s => <option key={s.owner_id} value={s.owner_id}>{s.name}</option>)}</select></div>
+                  <div className="space-y-1.5"><label className="text-xs font-semibold text-[#3B82F6] ml-1">Target Warehouse</label><select value={selectedTargetWarehouse} onChange={(e) => setSelectedTargetWarehouse(e.target.value)} disabled={!selectedNetSupplier} className="w-full p-3 bg-[#1F2937] border border-[#374151] rounded-lg text-white outline-none focus:border-[#3B82F6] text-sm font-medium appearance-none disabled:opacity-50"><option value="">-- Select Warehouse --</option>{supplierWarehouses.map(w => <option key={w.id} value={w.id}>{w.name}</option>)}</select></div>
                 </div>
               ) : (
-                <div className="space-y-1.5 p-5 rounded-2xl bg-[#0f1423]/50 border border-indigo-500/20"><label className="text-[9px] font-bold text-indigo-400 uppercase tracking-widest ml-1">External Receiver</label><input type="text" placeholder="e.g. Apex Industrial Solutions" value={buyerName} onChange={(e) => setBuyerName(e.target.value)} className="w-full p-4 bg-[#0f1423] border border-white/5 rounded-xl text-white focus:border-indigo-500/50 outline-none text-sm font-medium placeholder-slate-600" /></div>
+                <div className="space-y-1.5 p-5 rounded-xl bg-[#111827] border border-[#1F2937]"><label className="text-xs font-semibold text-[#8B5CF6] ml-1">External Receiver</label><input type="text" placeholder="e.g. Apex Industrial Solutions" value={buyerName} onChange={(e) => setBuyerName(e.target.value)} className="w-full p-3 bg-[#1F2937] border border-[#374151] rounded-lg text-white focus:border-[#8B5CF6] outline-none text-sm font-medium placeholder-slate-400" /></div>
               )}
 
-              <div className="p-4 rounded-xl border border-white/5 bg-[#0f1423] shadow-inner relative min-h-[100px] flex items-center justify-center">
-                {!selectedInvId ? (<p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Awaiting Input...</p>) : isAnalyzing ? (<div className="flex items-center gap-3 text-cyan-500/70"><div className="w-4 h-4 border-2 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin"></div><span className="text-[10px] font-black uppercase tracking-widest animate-pulse">Analyzing...</span></div>) : previewData ? (
-                  <div className="w-full grid grid-cols-3 gap-4 text-center animate-fade-in"><div className="space-y-1"><p className="text-[9px] text-slate-500 uppercase tracking-widest font-bold flex items-center justify-center gap-1.5">{Icons.RouteInfo} Log</p><p className="text-sm font-light text-slate-200">{previewData.distance} km</p></div><div className="space-y-1 border-x border-white/5"><p className="text-[9px] text-emerald-500 uppercase tracking-widest font-bold flex items-center justify-center gap-1.5">{Icons.Profit} Margin</p><p className="text-sm font-bold text-emerald-400">₹{previewData.profit}</p></div><div className="space-y-1"><p className="text-[9px] text-slate-500 uppercase tracking-widest font-bold flex items-center justify-center gap-1.5">{Icons.Weather} Radar</p><p className={`text-sm font-bold ${previewData.weather === 'Clear' ? 'text-cyan-400' : 'text-rose-400'}`}>{previewData.weather}</p></div></div>
+              <div className="p-4 rounded-xl border border-[#1F2937] bg-[#111827] relative min-h-[100px] flex items-center justify-center">
+                {!selectedInvId ? (<p className="text-xs font-medium text-[#9CA3AF]">Select source payload to estimate delivery Details</p>) : isAnalyzing ? (<div className="flex items-center gap-3 text-[#3B82F6]"><div className="w-4 h-4 border-2 border-[#1F2937] border-t-[#3B82F6] rounded-full animate-spin"></div><span className="text-xs font-semibold animate-pulse">Calculating route...</span></div>) : previewData ? (
+                  <div className="w-full grid grid-cols-3 gap-4 text-center animate-fade-in"><div className="space-y-1"><p className="text-xs text-[#9CA3AF] font-semibold flex items-center justify-center gap-1.5">{Icons.RouteInfo} Distance</p><p className="text-sm font-medium text-[#F9FAFB]">{previewData.distance} km</p></div><div className="space-y-1 border-x border-[#1F2937]"><p className="text-xs text-[#9CA3AF] font-semibold flex items-center justify-center gap-1.5">{Icons.Profit} Profit</p><p className="text-sm font-bold text-[#10B981]">₹{previewData.profit}</p></div><div className="space-y-1"><p className="text-xs text-[#9CA3AF] font-semibold flex items-center justify-center gap-1.5">{Icons.Weather} Weather</p><p className={`text-sm font-bold ${previewData.weather === 'Clear' ? 'text-[#3B82F6]' : 'text-rose-400'}`}>{previewData.weather}</p></div></div>
                 ) : null}
               </div>
-              <button onClick={handleCreateShipment} disabled={loading || isAnalyzing || !previewData} className="w-full bg-cyan-600 hover:bg-cyan-500 text-[#0b0f19] p-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-lg active:scale-95 disabled:opacity-50">{loading ? "Processing..." : "Initialize Trajectory"}</button>
+              <button onClick={handleCreateShipment} disabled={loading || isAnalyzing || !previewData} className="w-full bg-[#3B82F6] hover:bg-[#2563EB] text-white p-3.5 rounded-xl font-semibold text-sm transition-all shadow-sm active:scale-95 disabled:opacity-50">{loading ? "Processing..." : "Create Shipment"}</button>
             </div>
-            <div className="space-y-1.5 flex flex-col"><label className="text-[9px] font-bold uppercase tracking-widest ml-1 text-cyan-500">Target Coordinates</label><div className="flex-1 rounded-xl overflow-hidden border-2 border-white/5 min-h-[300px] shadow-inner"><MapPicker position={destPos} setPosition={setDestPos} /></div></div>
+            <div className="space-y-1.5 flex flex-col">
+              <label className="text-xs font-semibold ml-1 text-[#3B82F6]">Destination Map</label>
+
+              {/* Normal inline map with expand button */}
+              <div className="flex-1 rounded-xl overflow-hidden border-2 border-[#1F2937] min-h-[300px] shadow-sm relative">
+                <div className="absolute top-3 right-3 z-10">
+                  <button
+                    type="button"
+                    onClick={() => setMapFullscreen(true)}
+                    className="bg-[#1F2937] hover:bg-[#374151] border border-[#374151] text-[#F9FAFB] p-2 rounded-lg shadow-lg flex items-center justify-center transition-all"
+                    title="Enter Fullscreen"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" /></svg>
+                  </button>
+                </div>
+                <MapPicker position={destPos} setPosition={setDestPos} isFullscreen={false} />
+              </div>
+
+              {/* FULLSCREEN PORTAL — renders at document.body to escape parent transforms/stacking contexts */}
+              {mapFullscreen && typeof document !== 'undefined' && createPortal(
+                <div
+                  style={{ position: 'fixed', inset: 0, zIndex: 99999, background: '#05080f', padding: '16px', display: 'flex', flexDirection: 'column' }}
+                >
+                  <div style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 100000 }}>
+                    <button
+                      type="button"
+                      onClick={() => setMapFullscreen(false)}
+                      style={{ background: '#1F2937', border: '1px solid #374151', color: '#F9FAFB', padding: '8px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                      title="Exit Fullscreen"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" /></svg>
+                    </button>
+                  </div>
+                  <div style={{ flex: 1, borderRadius: '12px', overflow: 'hidden' }}>
+                    <MapPicker position={destPos} setPosition={(p) => { setDestPos(p); }} isFullscreen={true} />
+                  </div>
+                </div>,
+                document.body
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -257,7 +296,7 @@ export default function ShipmentManager() {
       {/* TABLE DATA */}
       <div className="w-full overflow-x-auto custom-scrollbar relative z-10">
         <table className="w-full text-left border-separate border-spacing-y-3 min-w-[800px]">
-          <thead><tr className="text-[10px] font-bold text-slate-500 uppercase tracking-widest"><th className="w-[45%] px-6 pb-2">Mission / ID</th><th className="w-[20%] text-center pb-2">Payload</th><th className="w-[20%] text-center pb-2">Status</th><th className="w-[15%] text-right px-6 pb-2">Telemetry</th></tr></thead>
+          <thead><tr className="text-xs font-semibold text-[#9CA3AF] border-b border-[#1F2937]"><th className="w-[45%] px-6 pb-2">Shipment ID</th><th className="w-[20%] text-center pb-2">Product</th><th className="w-[20%] text-center pb-2">Status</th><th className="w-[15%] text-right px-6 pb-2">Details</th></tr></thead>
           <tbody>
             {shipments.map((s) => {
               const details = getDriverAndTransitDetails(s);
@@ -271,45 +310,45 @@ export default function ShipmentManager() {
 
               return (
                 <React.Fragment key={s.id}>
-                  <tr className={`bg-[#161b2a] border border-cyan-500/5 hover:border-cyan-500/20 transition-all duration-300 group ${isDelivered ? 'opacity-60' : ''}`}>
-                    <td className="p-6 rounded-l-3xl"><p className="font-medium text-slate-200 text-base truncate group-hover:text-cyan-400 transition-colors">{s.name}</p><div className="flex items-center gap-3 mt-1.5"><span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">ID: {s.id.split('-')[0]}</span><span className="w-1 h-1 bg-slate-600 rounded-full"></span><span className="text-[9px] font-bold text-indigo-400 uppercase tracking-wider truncate max-w-[200px]">{s.buyer_name}</span></div></td>
-                    <td className="p-6 text-center font-medium text-slate-300 text-base">{s.quantity} <span className="text-[9px] text-slate-500 uppercase ml-1">Units</span></td>
-                    <td className="p-6 text-center">{isMoving ? (<div className="inline-flex items-center gap-2 bg-cyan-500/10 text-cyan-400 px-3 py-1.5 rounded-lg border border-cyan-500/20"><span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse"></span><span className="text-[9px] font-bold uppercase tracking-widest">In Orbit</span></div>) : (<div className="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-lg border border-emerald-500/20"><span className="text-[9px] font-bold uppercase tracking-widest">Docked</span></div>)}</td>
-                    <td className="p-6 text-right rounded-r-3xl"><button onClick={() => setExpandedId(expandedId === s.id ? null : s.id)} className="bg-[#0f1423] text-slate-400 w-10 h-10 rounded-xl flex items-center justify-center hover:bg-cyan-500 hover:text-[#0f1423] transition-all border border-cyan-500/10 ml-auto shadow-md">{expandedId === s.id ? Icons.Close : Icons.Satellite}</button></td>
+                  <tr className={`bg-[#111827] border border-[#1F2937] hover:border-[#374151] transition-all duration-300 group ${isDelivered ? 'opacity-60' : ''}`}>
+                    <td className="p-6 rounded-l-3xl"><p className="font-medium text-[#F9FAFB] text-base truncate group-hover:text-[#3B82F6] transition-colors">{s.name}</p><div className="flex items-center gap-3 mt-1.5"><span className="text-xs font-medium text-[#9CA3AF]">ID: {s.id.split('-')[0]}</span><span className="w-1 h-1 bg-[#4B5563] rounded-full"></span><span className="text-xs font-medium text-[#8B5CF6] truncate max-w-[200px]">{s.buyer_name}</span></div></td>
+                    <td className="p-6 text-center font-medium text-[#D1D5DB] text-base">{s.quantity} <span className="text-xs text-[#9CA3AF] ml-1">units</span></td>
+                    <td className="p-6 text-center">{isMoving ? (<div className="inline-flex items-center gap-2 bg-[#3B82F6]/10 text-[#3B82F6] px-3 py-1.5 rounded-lg border border-[#3B82F6]/20"><span className="w-1.5 h-1.5 bg-[#3B82F6] rounded-full animate-pulse"></span><span className="text-xs font-semibold">In Transit</span></div>) : (<div className="inline-flex items-center gap-2 bg-[#10B981]/10 text-[#10B981] px-3 py-1.5 rounded-lg border border-[#10B981]/20"><span className="text-xs font-semibold">Delivered</span></div>)}</td>
+                    <td className="p-6 text-right rounded-r-3xl"><button onClick={() => setExpandedId(expandedId === s.id ? null : s.id)} className="bg-[#1F2937] text-[#D1D5DB] w-10 h-10 rounded-xl flex items-center justify-center hover:bg-[#374151] hover:text-white transition-all border border-[#374151] ml-auto shadow-sm">{expandedId === s.id ? Icons.Close : Icons.RouteInfo}</button></td>
                   </tr>
                   {expandedId === s.id && (
-                    <tr className="animate-fade-in"><td colSpan={4} className="py-2"><div className="bg-[#05080f] rounded-4xl p-8 text-white flex flex-col border border-cyan-500/10 shadow-inner">
+                    <tr className="animate-fade-in"><td colSpan={4} className="py-2"><div className="bg-[#111827] rounded-3xl p-8 text-white flex flex-col border border-[#1F2937] shadow-sm mt-2 mb-2">
                       <div className="flex flex-col md:flex-row gap-10">
-                        <div className="flex-1 space-y-4"><p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Assigned Pilot</p><div className="flex items-center gap-5"><div className="w-12 h-12 rounded-xl bg-[#161b2a] flex items-center justify-center text-slate-400 border border-cyan-500/10">{Icons.Pilot}</div><div><p className="font-light text-xl text-slate-200">{details.driverName}</p><p className="text-xs text-indigo-400 font-bold mt-1">{details.truckNumber}</p></div></div></div>
-                        <div className="flex-1 space-y-5 md:border-l border-cyan-500/10 md:pl-10"><p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Trajectory Log</p><div className="space-y-4">
-                          {details.checkpoints.map((cp, i) => (<div key={i} className="flex items-center justify-between group"><div className="flex items-center gap-3"><div className={`w-1.5 h-1.5 rounded-full ${cp.completed ? 'bg-cyan-500' : 'bg-slate-700'}`}></div><span className="text-xs font-medium text-slate-300">{cp.status}</span></div><span className="text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md bg-white/5 text-cyan-400">{cp.time}</span></div>))}
+                        <div className="flex-1 space-y-4"><p className="text-xs font-semibold text-[#9CA3AF]">Driver Details</p><div className="flex items-center gap-5"><div className="w-12 h-12 rounded-xl bg-[#1F2937] flex items-center justify-center text-[#9CA3AF] border border-[#374151]">{Icons.Pilot}</div><div><p className="font-medium text-lg text-[#F9FAFB]">{details.driverName}</p><p className="text-xs text-[#8B5CF6] font-medium mt-1">{details.truckNumber}</p></div></div></div>
+                        <div className="flex-1 space-y-5 md:border-l border-[#1F2937] md:pl-10"><p className="text-xs font-semibold text-[#9CA3AF]">Tracking Log</p><div className="space-y-4">
+                          {details.checkpoints.map((cp, i) => (<div key={i} className="flex items-center justify-between group"><div className="flex items-center gap-3"><div className={`w-2 h-2 rounded-full ${cp.completed ? 'bg-[#3B82F6]' : 'bg-[#4B5563]'}`}></div><span className="text-sm font-medium text-[#D1D5DB]">{cp.status}</span></div><span className="text-xs font-medium px-2.5 py-1 rounded-md bg-[#1F2937] text-[#9CA3AF]">{cp.time}</span></div>))}
                         </div></div>
                       </div>
                       {isMoving && (
-                        <div className="mt-8 pt-6 border-t border-cyan-500/10">
+                        <div className="mt-8 pt-6 border-t border-[#1F2937]">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
                             <div className="space-y-4">
-                              <p className="text-[10px] font-bold text-cyan-500 uppercase tracking-[0.3em] mb-4">Arrival Receival Protocol</p>
+                              <p className="text-xs font-semibold text-[#3B82F6] mb-4">Confirm Delivery</p>
                               <div className="flex gap-4">
                                 <div className="flex-1 space-y-1.5">
-                                  <label className="text-[9px] text-slate-500 uppercase font-black ml-1">Arrival Date</label>
-                                  <input type="date" value={arrivalDate} onChange={(e) => setArrivalDate(e.target.value)} className="w-full p-3 bg-[#0f1423] border border-white/5 rounded-xl text-white text-xs outline-none focus:border-cyan-500/50" />
+                                  <label className="text-xs text-[#9CA3AF] font-medium ml-1">Arrival Date</label>
+                                  <input type="date" value={arrivalDate} onChange={(e) => setArrivalDate(e.target.value)} className="w-full p-2.5 bg-[#1F2937] border border-[#374151] rounded-lg text-white text-sm outline-none focus:border-[#3B82F6]" />
                                 </div>
                                 <div className="flex-1 space-y-1.5">
-                                  <label className="text-[9px] text-slate-500 uppercase font-black ml-1">Arrival Time</label>
-                                  <input type="time" value={arrivalTime} onChange={(e) => setArrivalTime(e.target.value)} className="w-full p-3 bg-[#0f1423] border border-white/5 rounded-xl text-white text-xs outline-none focus:border-cyan-500/50" />
+                                  <label className="text-xs text-[#9CA3AF] font-medium ml-1">Arrival Time</label>
+                                  <input type="time" value={arrivalTime} onChange={(e) => setArrivalTime(e.target.value)} className="w-full p-2.5 bg-[#1F2937] border border-[#374151] rounded-lg text-white text-sm outline-none focus:border-[#3B82F6]" />
                                 </div>
                               </div>
                             </div>
                             <div className="space-y-4 text-right">
                               <div className="mb-4">
-                                <p className="text-[9px] text-slate-500 uppercase font-black mb-1">Network Synchronization Status</p>
-                                <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${isLate ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'}`}>
-                                  System Delta: {isLate ? 'Delayed' : 'On Time'}
+                                <p className="text-xs text-[#9CA3AF] font-medium mb-1">Delivery Status</p>
+                                <span className={`text-xs font-semibold px-3 py-1 rounded-full border ${isLate ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' : 'bg-[#10B981]/10 text-[#10B981] border-[#10B981]/20'}`}>
+                                  {isLate ? 'Delayed' : 'Received On Time'}
                                 </span>
                               </div>
-                              <button onClick={() => handleConfirmArrival(s.id)} disabled={processingId === s.id} className="bg-emerald-600 hover:bg-emerald-500 text-[#0b0f19] px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg disabled:opacity-50 active:scale-95 flex items-center justify-center gap-2 ml-auto">
-                                {processingId === s.id ? "Verifying..." : (<>{Icons.Check} Confirm Docking & Arrival</>)}
+                              <button onClick={() => handleConfirmArrival(s.id)} disabled={processingId === s.id} className="bg-[#3B82F6] hover:bg-[#2563EB] text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-sm disabled:opacity-50 active:scale-95 flex items-center justify-center gap-2 ml-auto">
+                                {processingId === s.id ? "Saving..." : (<>{Icons.Check} Confirm Delivery</>)}
                               </button>
                             </div>
                           </div>
