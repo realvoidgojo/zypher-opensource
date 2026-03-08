@@ -55,15 +55,19 @@ export default function RootLayout({
     if (sid) {
       setIsLoggedIn(true);
       setSupplierName(sname || "Operator");
-      if (pathname === "/login" || pathname === "/") router.replace("/dashboard");
+      if (pathname === "/login" || pathname === "/landing" || pathname === "/")
+        router.replace("/dashboard");
     } else {
       setIsLoggedIn(false);
-      if (pathname !== "/login" && pathname !== "/") router.replace("/login");
+      if (pathname !== "/login" && pathname !== "/landing" && pathname !== "/")
+        router.replace("/landing");
     }
   }, [pathname, router]);
 
   // Close drawer on route change
-  useEffect(() => { setDrawerOpen(false); }, [pathname]);
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [pathname]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -72,29 +76,34 @@ export default function RootLayout({
     router.replace("/login");
   };
 
-  const isMoreActive = moreItems.some(i => i.href === pathname);
+  const isMoreActive = moreItems.some((i) => i.href === pathname);
 
   return (
     <html lang="en">
-      <body className={`${inter.className} text-[#F9FAFB] selection:bg-[#3B82F6]/30 selection:text-[#F9FAFB] antialiased bg-[#0B0F14]`}>
+      <body
+        className={`${inter.className} text-[#F9FAFB] selection:bg-[#3B82F6]/30 selection:text-[#F9FAFB] antialiased bg-[#0B0F14]`}
+      >
         {!mounted ? (
           <div className="h-screen w-full bg-[#0B0F14] flex flex-col items-center justify-center">
             <div className="w-8 h-8 border-2 border-[#1F2937] border-t-[#3B82F6] rounded-full animate-spin"></div>
           </div>
         ) : (
           <>
-            {!isLoggedIn || pathname === "/login" ? (
+            {!isLoggedIn || pathname === "/login" || pathname === "/landing" ? (
               <div className="w-full min-h-screen bg-[#0B0F14]">{children}</div>
             ) : (
               <div className="flex h-screen overflow-hidden bg-[#0B0F14]">
-
                 {/* ─── DESKTOP SIDEBAR (lg+) ─── */}
                 <aside className="hidden lg:flex w-60 bg-[#0B0F14] text-[#F9FAFB] flex-col border-r border-[#1F2937] flex-shrink-0">
                   <div className="p-6 flex-1 overflow-y-auto no-scrollbar">
-                    <h1 className="text-xl font-semibold mb-8 text-[#F9FAFB]">Zypher</h1>
+                    <h1 className="text-xl font-semibold mb-8 text-[#F9FAFB]">
+                      Zypher
+                    </h1>
                     <div className="mb-8">
                       <p className="text-xs text-[#9CA3AF] mb-1">Workspace</p>
-                      <p className="font-medium text-sm text-[#F9FAFB] truncate">{supplierName}</p>
+                      <p className="font-medium text-sm text-[#F9FAFB] truncate">
+                        {supplierName}
+                      </p>
                     </div>
                     <nav className="flex flex-col space-y-1">
                       {[...navItems, ...moreItems].map((item) => {
@@ -106,7 +115,12 @@ export default function RootLayout({
                             href={item.href}
                             className={`flex items-center gap-3 px-3 py-2 rounded-md transition-all duration-150 text-sm font-medium ${isActive ? "bg-[#111827] text-[#F9FAFB]" : "text-[#9CA3AF] hover:text-[#F9FAFB] hover:bg-[#111827]/50"}`}
                           >
-                            <Icon size={18} className={isActive ? "text-[#F9FAFB]" : "text-[#9CA3AF]"} />
+                            <Icon
+                              size={18}
+                              className={
+                                isActive ? "text-[#F9FAFB]" : "text-[#9CA3AF]"
+                              }
+                            />
                             {item.name}
                           </Link>
                         );
@@ -127,8 +141,12 @@ export default function RootLayout({
                 <main className="flex-1 overflow-y-auto bg-[#0B0F14] relative">
                   {/* Mobile top bar — just branding, no hamburger */}
                   <div className="lg:hidden sticky top-0 z-30 bg-[#0B0F14]/95 backdrop-blur-sm border-b border-[#1F2937] px-4 h-14 flex items-center justify-between">
-                    <h1 className="text-base font-semibold text-[#F9FAFB]">Zypher</h1>
-                    <p className="text-xs text-[#9CA3AF] font-medium truncate max-w-[160px]">{supplierName}</p>
+                    <h1 className="text-base font-semibold text-[#F9FAFB]">
+                      Zypher
+                    </h1>
+                    <p className="text-xs text-[#9CA3AF] font-medium truncate max-w-[160px]">
+                      {supplierName}
+                    </p>
                   </div>
 
                   <div className="p-4 sm:p-6 lg:p-8 w-full max-w-7xl mx-auto min-h-full pb-24 lg:pb-8">
@@ -149,7 +167,9 @@ export default function RootLayout({
                           className={`flex-1 flex flex-col items-center justify-center gap-1 transition-colors min-h-[56px] ${isActive ? "text-[#3B82F6]" : "text-[#6B7280]"}`}
                         >
                           <Icon size={20} />
-                          <span className="text-[10px] font-medium">{item.name}</span>
+                          <span className="text-[10px] font-medium">
+                            {item.name}
+                          </span>
                         </Link>
                       );
                     })}
@@ -180,8 +200,13 @@ export default function RootLayout({
                       </div>
 
                       <div className="flex items-center justify-between px-5 pb-3">
-                        <p className="text-xs font-semibold text-[#9CA3AF] uppercase tracking-wider">More</p>
-                        <button onClick={() => setDrawerOpen(false)} className="text-[#6B7280] p-1">
+                        <p className="text-xs font-semibold text-[#9CA3AF] uppercase tracking-wider">
+                          More
+                        </p>
+                        <button
+                          onClick={() => setDrawerOpen(false)}
+                          className="text-[#6B7280] p-1"
+                        >
                           <X size={18} />
                         </button>
                       </div>
@@ -197,8 +222,13 @@ export default function RootLayout({
                               className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all ${isActive ? "bg-[#111827] text-[#F9FAFB]" : "text-[#9CA3AF] hover:bg-[#111827] hover:text-[#F9FAFB]"}`}
                             >
                               <Icon size={20} />
-                              <span className="text-sm font-medium flex-1">{item.name}</span>
-                              <ChevronRight size={16} className="text-[#4B5563]" />
+                              <span className="text-sm font-medium flex-1">
+                                {item.name}
+                              </span>
+                              <ChevronRight
+                                size={16}
+                                className="text-[#4B5563]"
+                              />
                             </Link>
                           );
                         })}
