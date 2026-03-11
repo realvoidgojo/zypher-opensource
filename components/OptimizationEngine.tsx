@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/services/supabaseClient";
 import { predictDemand } from "@/services/mlPredictionService";
+import { Loader2 } from "lucide-react";
 
 const Icons = {
   Brain: (
@@ -145,7 +146,7 @@ export default function OptimizationEngine() {
   if (loading) {
     return (
       <div className="bg-[#111827] border border-[#1F2937] rounded-3xl p-8 mb-8 flex items-center justify-center gap-4 shadow-sm">
-        <div className="w-6 h-6 border-2 border-[#3B82F6] border-t-transparent rounded-full animate-spin"></div>
+        <Loader2 className="w-6 h-6 text-[#3B82F6] animate-spin" />
         <p className="text-[#9CA3AF] font-medium text-xs animate-pulse">
           Running optimization engine...
         </p>
@@ -202,7 +203,7 @@ export default function OptimizationEngine() {
           className="w-full bg-[#3B82F6] hover:bg-[#2563EB] text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-sm active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
         >
           {isApproving ? (
-            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            <Loader2 className="w-4 h-4 text-white animate-spin" />
           ) : (
             <>{Icons.Execute} Approve PO</>
           )}

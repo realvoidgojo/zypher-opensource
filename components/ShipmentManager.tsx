@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/services/supabaseClient";
 import dynamic from "next/dynamic";
 import { getRoute } from "@/services/routingService";
+import { Loader2 } from "lucide-react";
 
 const MapPicker = dynamic(() => import("@/components/MapPicker"), {
   ssr: false,
@@ -187,9 +188,9 @@ function getDriverAndTransitDetails(shipment: any) {
         status: "Asset Dispatched",
         time: shipment.start_time
           ? new Date(shipment.start_time).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })
+            hour: "2-digit",
+            minute: "2-digit",
+          })
           : "Logged",
         completed: true,
       },
@@ -203,9 +204,9 @@ function getDriverAndTransitDetails(shipment: any) {
         time: isDelivered
           ? shipment.end_time
             ? new Date(shipment.end_time).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })
+              hour: "2-digit",
+              minute: "2-digit",
+            })
             : "Docked"
           : "In Transit",
         completed: isDelivered,
@@ -647,7 +648,7 @@ export default function ShipmentManager() {
                   </p>
                 ) : isAnalyzing ? (
                   <div className="flex items-center gap-3 text-[#3B82F6]">
-                    <div className="w-4 h-4 border-2 border-[#1F2937] border-t-[#3B82F6] rounded-full animate-spin"></div>
+                    <Loader2 className="w-4 h-4 text-[#3B82F6] animate-spin" />
                     <span className="text-xs font-semibold animate-pulse">
                       Calculating route...
                     </span>

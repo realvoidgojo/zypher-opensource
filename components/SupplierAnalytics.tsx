@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { supabase } from "@/services/supabaseClient"
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, LabelList } from "recharts"
+import { Loader2 } from "lucide-react"
 
 // Custom SVG to maintain the enterprise look
 const ShieldIcon = <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>;
@@ -33,7 +34,7 @@ export default function SupplierAnalytics() {
 
   if (loading) return (
     <div className="p-20 flex flex-col items-center justify-center">
-      <div className="w-8 h-8 border-2 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin"></div>
+      <Loader2 className="w-8 h-8 text-[#3B82F6] animate-spin" />
     </div>
   );
 

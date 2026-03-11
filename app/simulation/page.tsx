@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/services/supabaseClient";
+import { Loader2 } from "lucide-react";
 import {
   AreaChart,
   Area,
@@ -81,7 +82,7 @@ export default function SimulationPage() {
   if (loading)
     return (
       <div className="p-20 flex flex-col items-center justify-center min-h-[500px]">
-        <div className="w-12 h-12 border-4 border-rose-500/30 border-t-rose-500 rounded-full animate-spin"></div>
+        <Loader2 className="w-12 h-12 text-[#3B82F6] animate-spin" />
         <p className="mt-6 text-[#9CA3AF] font-medium text-xs animate-pulse">
           Loading simulation...
         </p>

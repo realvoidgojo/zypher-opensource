@@ -18,6 +18,7 @@ import {
   X,
   MoreHorizontal,
   ChevronRight,
+  Loader2,
 } from "lucide-react";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -85,7 +86,7 @@ export default function RootLayout({
       >
         {!mounted ? (
           <div className="h-screen w-full bg-[#0B0F14] flex flex-col items-center justify-center">
-            <div className="w-8 h-8 border-2 border-[#1F2937] border-t-[#3B82F6] rounded-full animate-spin"></div>
+            <Loader2 className="w-8 h-8 text-[#3B82F6] animate-spin" />
           </div>
         ) : (
           <>

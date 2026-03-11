@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/services/supabaseClient";
 import { predictDemand, chatAI } from "@/services/mlPredictionService";
 import ReactMarkdown from "react-markdown";
+import { Loader2 } from "lucide-react";
 import {
   XAxis,
   YAxis,
@@ -198,7 +199,7 @@ Rules:
   if (loading)
     return (
       <div className="p-20 flex flex-col items-center justify-center min-h-[500px]">
-        <div className="w-12 h-12 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin"></div>
+        <Loader2 className="w-12 h-12 text-[#3B82F6] animate-spin" />
         <p className="mt-6 text-[#9CA3AF] font-medium text-xs animate-pulse">
           Loading forecast...
         </p>
@@ -470,11 +471,10 @@ Rules:
                   className={`flex ${m.role === "assistant" ? "justify-start" : "justify-end"}`}
                 >
                   <div
-                    className={`max-w-[85%] p-3.5 rounded-2xl text-[13px] font-medium leading-relaxed shadow-sm ${
-                      m.role === "assistant"
+                    className={`max-w-[85%] p-3.5 rounded-2xl text-[13px] font-medium leading-relaxed shadow-sm ${m.role === "assistant"
                         ? "bg-[#161b2a] text-slate-200 border border-[#1F2937] rounded-tl-sm"
                         : "bg-[#3B82F6] text-white border border-[#2563EB] rounded-tr-sm"
-                    }`}
+                      }`}
                   >
                     {m.role === "assistant" ? (
                       <div className="prose prose-invert prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0.5 prose-headings:my-2 prose-headings:text-cyan-400 prose-strong:text-white prose-a:text-cyan-400">
@@ -490,7 +490,7 @@ Rules:
               {chatLoading && (
                 <div className="flex justify-start">
                   <div className="bg-[#0B0F14] border border-[#1F2937] text-[#9CA3AF] text-[13px] font-medium p-3.5 rounded-2xl rounded-tl-sm flex items-center gap-3">
-                    <div className="w-4 h-4 border-2 border-[#1F2937] border-t-[#3B82F6] rounded-full animate-spin"></div>
+                    <Loader2 className="w-4 h-4 text-[#3B82F6] animate-spin" />
                     Thinking...
                   </div>
                 </div>

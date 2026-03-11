@@ -2,6 +2,7 @@
 import { useState } from "react"
 import { supabase } from "@/services/supabaseClient"
 import { useRouter } from "next/navigation"
+import { Loader2 } from "lucide-react"
 
 export default function LoginPage() {
   const [isNewUser, setIsNewUser] = useState(false)
@@ -120,7 +121,7 @@ export default function LoginPage() {
           >
             {loading ? (
               <>
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                <Loader2 className="w-4 h-4 text-white animate-spin" />
                 Authenticating...
               </>
             ) : isNewUser ? "Sign Up" : "Sign In"}

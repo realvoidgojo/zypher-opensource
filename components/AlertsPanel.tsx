@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   Navigation,
   Phone,
+  Loader2,
 } from "lucide-react";
 
 export default function AlertsPanel({
@@ -71,7 +72,7 @@ export default function AlertsPanel({
       <div className="space-y-3 overflow-y-auto pr-2 custom-scrollbar flex-1 relative z-10 pt-2">
         {loading ? (
           <div className="flex flex-col items-center justify-center h-full gap-4">
-            <div className="w-6 h-6 border-2 border-[#1F2937] border-t-[#3B82F6] rounded-full animate-spin"></div>
+            <Loader2 className="w-6 h-6 text-[#3B82F6] animate-spin" />
             <div className="text-[#9CA3AF] font-medium text-[12px]">
               Loading alerts...
             </div>
@@ -80,11 +81,10 @@ export default function AlertsPanel({
           alerts.map((alert) => (
             <div
               key={alert.id}
-              className={`p-4 rounded-lg border transition-all duration-150 bg-[#0B0F14] hover:border-[#374151] ${
-                alert.type === "critical"
+              className={`p-4 rounded-lg border transition-all duration-150 bg-[#0B0F14] hover:border-[#374151] ${alert.type === "critical"
                   ? "border-l-2 border-l-[#EF4444] border-t-[#1F2937] border-r-[#1F2937] border-b-[#1F2937]"
                   : "border-[#1F2937]"
-              }`}
+                }`}
             >
               <div className="flex justify-between items-start mb-2">
                 <div

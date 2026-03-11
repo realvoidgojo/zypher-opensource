@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/services/supabaseClient";
+import { Loader2 } from "lucide-react";
 
 const IconCheck = (
   <svg
@@ -146,7 +147,7 @@ export default function ProcurementPage() {
   if (loading)
     return (
       <div className="p-20 flex flex-col items-center justify-center min-h-[500px]">
-        <div className="w-12 h-12 border-4 border-[#3B82F6] border-t-transparent rounded-full animate-spin"></div>
+        <Loader2 className="w-12 h-12 text-[#3B82F6] animate-spin" />
         <p className="mt-6 text-[#9CA3AF] font-medium text-xs animate-pulse">
           Loading recommendations...
         </p>
@@ -275,7 +276,7 @@ export default function ProcurementPage() {
                             className="bg-[#3B82F6] hover:bg-[#2563EB] text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-sm active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 ml-auto w-36"
                           >
                             {isWorking ? (
-                              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                              <Loader2 className="w-4 h-4 text-white animate-spin" />
                             ) : (
                               "Approve"
                             )}
