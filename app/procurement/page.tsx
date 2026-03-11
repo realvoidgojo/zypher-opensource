@@ -200,95 +200,170 @@ export default function ProcurementPage() {
             </p>
           </div>
         ) : (
-          <div className="w-full overflow-x-auto custom-scrollbar">
-            <table className="w-full text-left border-separate border-spacing-y-3 min-w-[900px]">
-              <thead>
-                <tr className="text-xs font-semibold text-[#9CA3AF] border-b border-[#1F2937]">
-                  <th className="px-6 pb-2">Product</th>
-                  <th className="pb-2">Recommended Vendor</th>
-                  <th className="text-center pb-2">Quantity</th>
-                  <th className="text-center pb-2">Estimated Cost</th>
-                  <th className="text-right px-6 pb-2">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recommendations.map((req) => {
-                  const isDone = approved.includes(req.id);
-                  const isWorking = processing === req.id;
+          <>
+            {/* Mobile View */}
+            <div className="block md:hidden space-y-4">
+              {recommendations.map((req) => {
+                const isDone = approved.includes(req.id);
+                const isWorking = processing === req.id;
 
-                  return (
-                    <tr
-                      key={req.id}
-                      className={`bg-[#111827] border border-[#1F2937] transition-all duration-300 ${isDone ? "opacity-50 grayscale" : "hover:bg-[#1F2937] hover:border-[#374151]"}`}
-                    >
-                      <td className="p-5 rounded-l-3xl">
-                        <p className="font-medium text-[#F9FAFB] text-sm">
-                          {req.sku}
-                        </p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span
-                            className={`text-xs font-semibold px-2 py-0.5 rounded-md border ${req.urgency === "Critical" ? "bg-rose-500/10 text-rose-400 border-rose-500/20 animate-pulse" : req.urgency === "High" ? "bg-amber-500/10 text-amber-400 border-amber-500/20" : "bg-[#3B82F6]/10 text-[#3B82F6] border-[#3B82F6]/20"}`}
-                          >
-                            {req.urgency}
-                          </span>
-                          <span className="text-xs font-medium text-[#9CA3AF]">
-                            ID: {req.id}
-                          </span>
+                return (
+                  <div
+                    key={req.id}
+                    className={`bg-[#111827] border border-[#1F2937] rounded-3xl p-5 flex flex-col gap-4 ${isDone ? "opacity-50 grayscale" : ""}`}
+                  >
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium text-[#F9FAFB] text-base">{req.sku}</p>
+                        <span className="text-xs font-medium text-[#9CA3AF]">ID: {req.id}</span>
+                      </div>
+                      <span
+                        className={`text-xs font-semibold px-2 py-1 rounded-md border ${req.urgency === "Critical" ? "bg-rose-500/10 text-rose-400 border-rose-500/20 animate-pulse" : req.urgency === "High" ? "bg-amber-500/10 text-amber-400 border-amber-500/20" : "bg-[#3B82F6]/10 text-[#3B82F6] border-[#3B82F6]/20"}`}
+                      >
+                        {req.urgency}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-xs text-[#9CA3AF]">Supplier</p>
+                        <p className="text-sm font-medium text-[#D1D5DB] truncate">{req.supplier}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-[#9CA3AF]">Quantity &amp; Cost</p>
+                        <p className="text-sm font-semibold text-[#8B5CF6]">{req.qty} un <span className="text-[#9CA3AF] font-normal mx-0.5">•</span> {req.cost}</p>
+                      </div>
+                    </div>
+
+                    <div className="border-t border-[#1F2937] pt-4 mt-2 flex items-center justify-between">
+                      <p className="text-xs text-[#9CA3AF]">
+                        Risk:{" "}
+                        <span
+                          className={
+                            req.risk === "High"
+                              ? "text-rose-400"
+                              : req.risk === "Medium"
+                                ? "text-amber-400"
+                                : "text-[#10B981]"
+                          }
+                        >
+                          {req.risk}
+                        </span>
+                      </p>
+                      {isDone ? (
+                        <div className="inline-flex items-center gap-2 bg-[#10B981]/10 text-[#10B981] px-3 py-1.5 rounded-lg border border-[#10B981]/20">
+                          {IconCheck} <span className="text-xs font-semibold text-[#10B981]">Ordered</span>
                         </div>
-                      </td>
-                      <td className="p-5">
-                        <p className="text-sm font-medium text-[#D1D5DB]">
-                          {req.supplier}
-                        </p>
-                        <p className="text-xs text-[#9CA3AF] mt-1">
-                          Supplier Risk:{" "}
-                          <span
-                            className={
-                              req.risk === "High"
-                                ? "text-rose-400"
-                                : req.risk === "Medium"
-                                  ? "text-amber-400"
-                                  : "text-[#10B981]"
-                            }
-                          >
-                            {req.risk}
-                          </span>
-                        </p>
-                      </td>
-                      <td className="p-5 text-center font-medium text-lg text-[#F9FAFB]">
-                        {req.qty}
-                      </td>
-                      <td className="p-5 text-center font-semibold text-[#8B5CF6]">
-                        {req.cost}
-                      </td>
-                      <td className="p-5 text-right rounded-r-3xl pr-6">
-                        {isDone ? (
-                          <div className="inline-flex items-center gap-2 bg-[#10B981]/10 text-[#10B981] px-4 py-2 rounded-lg border border-[#10B981]/20">
-                            {IconCheck}{" "}
-                            <span className="text-xs font-semibold">
-                              Ordered
+                      ) : (
+                        <button
+                          onClick={() => handleApprove(req)}
+                          disabled={isWorking}
+                          className="bg-[#3B82F6] hover:bg-[#2563EB] text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 w-28"
+                        >
+                          {isWorking ? (
+                            <Loader2 className="w-4 h-4 text-white animate-spin" />
+                          ) : (
+                            "Approve"
+                          )}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Desktop View */}
+            <div className="hidden md:block w-full overflow-x-auto custom-scrollbar">
+              <table className="w-full text-left border-separate border-spacing-y-3 min-w-[900px]">
+                <thead>
+                  <tr className="text-xs font-semibold text-[#9CA3AF] border-b border-[#1F2937]">
+                    <th className="px-6 pb-2">Product</th>
+                    <th className="pb-2">Recommended Vendor</th>
+                    <th className="text-center pb-2">Quantity</th>
+                    <th className="text-center pb-2">Estimated Cost</th>
+                    <th className="text-right px-6 pb-2">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recommendations.map((req) => {
+                    const isDone = approved.includes(req.id);
+                    const isWorking = processing === req.id;
+
+                    return (
+                      <tr
+                        key={req.id}
+                        className={`bg-[#111827] border border-[#1F2937] transition-all duration-300 ${isDone ? "opacity-50 grayscale" : "hover:bg-[#1F2937] hover:border-[#374151]"}`}
+                      >
+                        <td className="p-5 rounded-l-3xl">
+                          <p className="font-medium text-[#F9FAFB] text-sm">
+                            {req.sku}
+                          </p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span
+                              className={`text-xs font-semibold px-2 py-0.5 rounded-md border ${req.urgency === "Critical" ? "bg-rose-500/10 text-rose-400 border-rose-500/20 animate-pulse" : req.urgency === "High" ? "bg-amber-500/10 text-amber-400 border-amber-500/20" : "bg-[#3B82F6]/10 text-[#3B82F6] border-[#3B82F6]/20"}`}
+                            >
+                              {req.urgency}
+                            </span>
+                            <span className="text-xs font-medium text-[#9CA3AF]">
+                              ID: {req.id}
                             </span>
                           </div>
-                        ) : (
-                          <button
-                            onClick={() => handleApprove(req)}
-                            disabled={isWorking}
-                            className="bg-[#3B82F6] hover:bg-[#2563EB] text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-sm active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 ml-auto w-36"
-                          >
-                            {isWorking ? (
-                              <Loader2 className="w-4 h-4 text-white animate-spin" />
-                            ) : (
-                              "Approve"
-                            )}
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                        </td>
+                        <td className="p-5">
+                          <p className="text-sm font-medium text-[#D1D5DB]">
+                            {req.supplier}
+                          </p>
+                          <p className="text-xs text-[#9CA3AF] mt-1">
+                            Supplier Risk:{" "}
+                            <span
+                              className={
+                                req.risk === "High"
+                                  ? "text-rose-400"
+                                  : req.risk === "Medium"
+                                    ? "text-amber-400"
+                                    : "text-[#10B981]"
+                              }
+                            >
+                              {req.risk}
+                            </span>
+                          </p>
+                        </td>
+                        <td className="p-5 text-center font-medium text-lg text-[#F9FAFB]">
+                          {req.qty}
+                        </td>
+                        <td className="p-5 text-center font-semibold text-[#8B5CF6]">
+                          {req.cost}
+                        </td>
+                        <td className="p-5 text-right rounded-r-3xl pr-6">
+                          {isDone ? (
+                            <div className="inline-flex items-center gap-2 bg-[#10B981]/10 text-[#10B981] px-4 py-2 rounded-lg border border-[#10B981]/20">
+                              {IconCheck}{" "}
+                              <span className="text-xs font-semibold">
+                                Ordered
+                              </span>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => handleApprove(req)}
+                              disabled={isWorking}
+                              className="bg-[#3B82F6] hover:bg-[#2563EB] text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-sm active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 ml-auto w-36"
+                            >
+                              {isWorking ? (
+                                <Loader2 className="w-4 h-4 text-white animate-spin" />
+                              ) : (
+                                "Approve"
+                              )}
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>

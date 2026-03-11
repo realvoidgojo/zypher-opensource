@@ -164,102 +164,163 @@ export default function HeatmapPage() {
           </div>
         </div>
       ) : (
-        <div className="bg-[#111827] p-4 md:p-8 lg:p-10 rounded-3xl border border-[#1F2937] shadow-sm w-full">
-          <div className="overflow-x-auto custom-scrollbar w-full pt-6 md:pt-10 pb-6 md:pb-10 relative z-20">
-            <div className="min-w-max md:min-w-[800px] px-2 md:px-4">
-              <div className="flex mb-4">
-                <div className="w-24 md:w-32 shrink-0"></div>
-                {productsList.map((p) => (
-                  <div
-                    key={p}
-                    className="flex-1 text-center text-[10px] md:text-xs font-semibold text-[#9CA3AF] px-1 md:px-2 min-w-[60px] md:min-w-0"
-                  >
-                    <div className="truncate w-full">{p}</div>
-                  </div>
-                ))}
-              </div>
+        <>
+          {/* Mobile View */}
+          <div className="block md:hidden space-y-6">
+            {matrix.map((row, rowIndex) => (
+              <div key={row.region} className="bg-[#111827] rounded-3xl border border-[#1F2937] p-5">
+                <h3 className="text-sm font-semibold text-[#F9FAFB] mb-4 border-b border-[#1F2937] pb-3">{row.region}</h3>
+                <div className="grid grid-cols-4 sm:grid-cols-5 gap-3">
+                  {row.data.map((cell, i) => {
+                    if (cell.qty === "N/A") {
+                      return <div key={i} className="h-12 rounded-xl bg-[#111827] border border-[#1F2937] opacity-30"></div>;
+                    }
+                    const isHigh = cell.intensity > 75;
+                    const isMed = cell.intensity > 40 && cell.intensity <= 75;
 
-              <div className="space-y-3">
-                {matrix.map((row, rowIndex) => (
-                  <div
-                    key={row.region}
-                    className="flex items-center gap-4 relative group/row border-transparent"
-                  >
-                    <div className="w-24 md:w-32 shrink-0 text-xs md:text-sm font-medium text-[#D1D5DB] text-right pr-2 md:pr-4 border-r border-[#1F2937] truncate">
-                      {row.region}
+                    let bgColor = "bg-[#1F2937] border-white/5";
+                    if (isMed) bgColor = "bg-[#3B82F6] border-[#2563EB]";
+                    if (isHigh) bgColor = "bg-[#EF4444] border-[#DC2626]";
+
+                    return (
+                      <div
+                        key={i}
+                        className={`h-12 rounded-xl border flex items-center justify-center active:scale-95 transition-transform duration-200 cursor-crosshair ${bgColor}`}
+                        onTouchStart={(e) => {
+                          const rect = e.currentTarget.getBoundingClientRect();
+                          setHoveredCell({ cell, region: row.region, x: rect.left + rect.width / 2, y: rect.top, isHigh });
+                        }}
+                        onMouseEnter={(e) => {
+                          const rect = e.currentTarget.getBoundingClientRect();
+                          setHoveredCell({ cell, region: row.region, x: rect.left + rect.width / 2, y: rect.top, isHigh });
+                        }}
+                        onMouseLeave={() => setHoveredCell(null)}
+                        onTouchEnd={() => setTimeout(() => setHoveredCell(null), 1500)}
+                      >
+                        <span className={`text-[11px] font-semibold ${isHigh ? "text-white" : "text-[#9CA3AF]"}`}>
+                          {cell.intensity}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+
+            <div className="flex flex-wrap items-center justify-center gap-4 mt-8 bg-[#111827] p-5 rounded-3xl border border-[#1F2937]">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-sm bg-[#1F2937] border border-white/5"></div>
+                <span className="text-xs font-medium text-[#9CA3AF]">Healthy</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-sm bg-[#3B82F6] border border-[#2563EB]"></div>
+                <span className="text-xs font-medium text-[#9CA3AF]">Reorder</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-sm bg-[#EF4444] border border-[#DC2626]"></div>
+                <span className="text-xs font-medium text-[#9CA3AF]">Critical</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop View */}
+          <div className="hidden md:block bg-[#111827] p-8 lg:p-10 rounded-3xl border border-[#1F2937] shadow-sm w-full">
+            <div className="overflow-x-auto custom-scrollbar w-full pt-10 pb-10 relative z-20">
+              <div className="min-w-[800px] px-4">
+                <div className="flex mb-4">
+                  <div className="w-32 shrink-0"></div>
+                  {productsList.map((p) => (
+                    <div
+                      key={p}
+                      className="flex-1 text-center text-xs font-semibold text-[#9CA3AF] px-2 min-w-0"
+                    >
+                      <div className="truncate w-full">{p}</div>
                     </div>
-                    <div className="flex flex-1 gap-2">
-                      {row.data.map((cell, i) => {
-                        if (cell.qty === "N/A") {
+                  ))}
+                </div>
+
+                <div className="space-y-3">
+                  {matrix.map((row, rowIndex) => (
+                    <div
+                      key={row.region}
+                      className="flex items-center gap-4 relative group/row border-transparent"
+                    >
+                      <div className="w-32 shrink-0 text-sm font-medium text-[#D1D5DB] text-right pr-4 border-r border-[#1F2937] truncate">
+                        {row.region}
+                      </div>
+                      <div className="flex flex-1 gap-2">
+                        {row.data.map((cell, i) => {
+                          if (cell.qty === "N/A") {
+                            return (
+                              <div
+                                key={i}
+                                className="flex-1 min-w-0 h-14 rounded-xl bg-[#111827] border border-[#1F2937] opacity-30"
+                              ></div>
+                            );
+                          }
+
+                          const isHigh = cell.intensity > 75;
+                          const isMed =
+                            cell.intensity > 40 && cell.intensity <= 75;
+
+                          let bgColor = "bg-[#1F2937] border-white/5";
+                          if (isMed) bgColor = "bg-[#3B82F6] border-[#2563EB]";
+                          if (isHigh) bgColor = "bg-[#EF4444] border-[#DC2626]";
+
                           return (
                             <div
                               key={i}
-                              className="flex-1 min-w-[60px] md:min-w-0 h-10 md:h-14 rounded-xl bg-[#111827] border border-[#1F2937] opacity-30"
-                            ></div>
-                          );
-                        }
-
-                        const isHigh = cell.intensity > 75;
-                        const isMed =
-                          cell.intensity > 40 && cell.intensity <= 75;
-
-                        let bgColor = "bg-[#1F2937] border-white/5";
-                        if (isMed) bgColor = "bg-[#3B82F6] border-[#2563EB]";
-                        if (isHigh) bgColor = "bg-[#EF4444] border-[#DC2626]";
-
-                        return (
-                          <div
-                            key={i}
-                            className={`flex-1 min-w-[60px] md:min-w-0 h-10 md:h-14 rounded-xl border flex items-center justify-center transition-transform duration-300 hover:scale-105 cursor-crosshair group ${bgColor}`}
-                            onMouseEnter={(e) => {
-                              const rect =
-                                e.currentTarget.getBoundingClientRect();
-                              setHoveredCell({
-                                cell,
-                                region: row.region,
-                                x: rect.left + rect.width / 2,
-                                y: rect.top,
-                                isHigh,
-                              });
-                            }}
-                            onMouseLeave={() => setHoveredCell(null)}
-                          >
-                            <span
-                              className={`text-xs font-semibold ${isHigh ? "text-white" : "text-[#9CA3AF] group-hover:text-[#F9FAFB]"}`}
+                              className={`flex-1 min-w-0 h-14 rounded-xl border flex items-center justify-center transition-transform duration-300 hover:scale-105 cursor-crosshair group ${bgColor}`}
+                              onMouseEnter={(e) => {
+                                const rect =
+                                  e.currentTarget.getBoundingClientRect();
+                                setHoveredCell({
+                                  cell,
+                                  region: row.region,
+                                  x: rect.left + rect.width / 2,
+                                  y: rect.top,
+                                  isHigh,
+                                });
+                              }}
+                              onMouseLeave={() => setHoveredCell(null)}
                             >
-                              {cell.intensity}
-                            </span>
-                          </div>
-                        );
-                      })}
+                              <span
+                                className={`text-xs font-semibold ${isHigh ? "text-white" : "text-[#9CA3AF] group-hover:text-[#F9FAFB]"}`}
+                              >
+                                {cell.intensity}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-6 mt-8 pt-6 border-t border-[#1F2937] relative z-10">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-sm bg-[#1F2937] border border-white/5"></div>
+                <span className="text-xs font-medium text-[#9CA3AF]">
+                  Healthy Reserves
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-sm bg-[#3B82F6] border border-[#2563EB]"></div>
+                <span className="text-xs font-medium text-[#9CA3AF]">
+                  Reorder Threshold
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-sm bg-[#EF4444] border border-[#DC2626]"></div>
+                <span className="text-xs font-medium text-[#9CA3AF]">
+                  Critical Depletion
+                </span>
               </div>
             </div>
           </div>
-
-          <div className="flex flex-wrap items-center justify-center md:justify-end gap-4 md:gap-6 mt-8 pt-6 border-t border-[#1F2937] relative z-10">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-sm bg-[#1F2937] border border-white/5"></div>
-              <span className="text-xs font-medium text-[#9CA3AF]">
-                Healthy Reserves
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-sm bg-[#3B82F6] border border-[#2563EB]"></div>
-              <span className="text-xs font-medium text-[#9CA3AF]">
-                Reorder Threshold
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-sm bg-[#EF4444] border border-[#DC2626]"></div>
-              <span className="text-xs font-medium text-[#9CA3AF]">
-                Critical Depletion
-              </span>
-            </div>
-          </div>
-        </div>
+        </>
       )}
 
       {/* 
