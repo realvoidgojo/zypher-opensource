@@ -75,7 +75,7 @@ export default function LandingPage() {
   const [starCount, setStarCount] = useState<number | null>(null);
 
   useEffect(() => {
-    fetch("https://api.github.com/repos/realvoidgojo/zypher_hackathon")
+    fetch("https://api.github.com/repos/realvoidgojo/zypher-opensource")
       .then((r) => r.json())
       .then((d) => {
         if (d.stargazers_count !== undefined) setStarCount(d.stargazers_count);
@@ -93,7 +93,7 @@ export default function LandingPage() {
           </span>
           <div className="flex items-center gap-4">
             <a
-              href="https://github.com/realvoidgojo/zypher_hackathon"
+              href="https://github.com/realvoidgojo/zypher-opensource"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#9CA3AF] hover:text-[#F9FAFB] transition-colors text-sm font-medium flex items-center gap-1.5"
@@ -140,7 +140,7 @@ export default function LandingPage() {
 
         <div className="flex flex-wrap items-center gap-3 mt-8">
           <a
-            href="https://github.com/realvoidgojo/zypher_hackathon"
+            href="https://github.com/realvoidgojo/zypher-opensource"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-[#1F2937] text-[#F9FAFB] px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-[#374151] transition-colors border border-[#374151]"
@@ -306,18 +306,26 @@ export default function LandingPage() {
         </div>
 
         <div className="mt-6 bg-[#111827] border border-[#1F2937] rounded-lg p-4 max-w-lg font-mono text-sm overflow-x-auto">
-          <p className="text-[#6B7280] mb-1 whitespace-nowrap"># clone and get started</p>
-          <p className="text-[#D1D5DB] whitespace-nowrap text-[0.6rem] sm:text-sm">
-            git clone https://github.com/realvoidgojo/zypher_hackathon.git
+          <p className="text-[#6B7280] mb-1 whitespace-nowrap">
+            # clone and get started
           </p>
-          <p className="text-[#D1D5DB] whitespace-nowrap text-[0.6rem] sm:text-sm">cd zypher_hackathon</p>
-          <p className="text-[#D1D5DB] whitespace-nowrap text-[0.6rem] sm:text-sm">npm install</p>
-          <p className="text-[#D1D5DB] whitespace-nowrap text-[0.6rem] sm:text-sm">npm run dev</p>
+          <p className="text-[#D1D5DB] whitespace-nowrap text-[0.6rem] sm:text-sm">
+            git clone https://github.com/realvoidgojo/zypher-opensource.git
+          </p>
+          <p className="text-[#D1D5DB] whitespace-nowrap text-[0.6rem] sm:text-sm">
+            cd zypher-opensource
+          </p>
+          <p className="text-[#D1D5DB] whitespace-nowrap text-[0.6rem] sm:text-sm">
+            npm install
+          </p>
+          <p className="text-[#D1D5DB] whitespace-nowrap text-[0.6rem] sm:text-sm">
+            npm run dev
+          </p>
         </div>
 
         <div className="mt-6">
           <a
-            href="https://github.com/realvoidgojo/zypher_hackathon/issues"
+            href="https://github.com/realvoidgojo/zypher-opensource/issues"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-sm font-medium text-[#3B82F6] hover:text-[#60A5FA] transition-colors"
@@ -335,7 +343,7 @@ export default function LandingPage() {
           </p>
           <div className="flex items-center gap-4">
             <a
-              href="https://github.com/realvoidgojo/zypher_hackathon"
+              href="https://github.com/realvoidgojo/zypher-opensource"
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs text-[#6B7280] hover:text-[#9CA3AF] transition-colors"
