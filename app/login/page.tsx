@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { GoogleReCaptcha } from "@/components/GoogleReCaptcha";
+import { TurnstileCaptcha } from "@/components/TurnstileCaptcha";
 import { supabase } from "@/services/supabaseClient";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 
@@ -13,7 +13,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [company, setCompany] = useState("");
 
-  // reCAPTCHA state
+  // Turnstile state
   const [recaptchaError, setRecaptchaError] = useState("");
 
   async function verifyCaptchaToken(token: string) {
@@ -184,9 +184,9 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Google reCAPTCHA - moved below password */}
+          {/* Cloudflare Turnstile - moved below password */}
           <div className="space-y-1 text-left flex flex-col items-center">
-            <GoogleReCaptcha />
+            <TurnstileCaptcha />
             {recaptchaError && (
               <div className="text-xs text-red-500 mt-1">{recaptchaError}</div>
             )}

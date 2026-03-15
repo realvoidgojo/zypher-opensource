@@ -1,6 +1,6 @@
 import Script from "next/script";
 
-export function GoogleReCaptcha() {
+export function TurnstileCaptcha() {
   return (
     <>
       <Script
