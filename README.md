@@ -1,19 +1,19 @@
 # Zypher
 
-![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
-![React](https://img.shields.io/badge/React-19-20232a?logo=react)
+![Next.js](https://img.shields.io/badge/Next.js-App%20Router-black?logo=next.js)
+![React](https://img.shields.io/badge/React-20232a?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Python-009688?logo=fastapi&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-Postgres-3ECF8E?logo=supabase&logoColor=white)
 ![Render](https://img.shields.io/badge/Deploy-Render-46E3B7)
 ![Vercel](https://img.shields.io/badge/Deploy-Vercel-black?logo=vercel)
 
-Supply-chain platform built to execute, not impress.
+> A supply chain platform focused on getting things done, not showing off.
 
 <p>
   <img src="https://img.shields.io/badge/Setup-Fast-0ea5e9" alt="Fast setup" />
   <img src="https://img.shields.io/badge/Workflows-Logistics-22c55e" alt="Logistics workflows" />
-  <img src="https://img.shields.io/badge/Intelligence-ML%20%2B%20AI-a855f7" alt="ML and AI" />
+  <img src="https://img.shields.io/badge/repIntelligence-ML%20%2B%20AI-a855f7" alt="ML and AI" />
   <img src="https://img.shields.io/badge/Readiness-Production-f97316" alt="Production ready" />
 </p>
 
@@ -39,20 +39,26 @@ Zypher cuts that out: track inventory, move shipments, predict risk, and make de
 - Route + weather-aware shipment analysis
 - Delay probability prediction
 - Demand forecasting endpoint
-- AI assistant through server-side chat route
+- Copilot Logistics Assistant (Powered by Gemini)
 
-### Highlights at a glance
+### SaaS Features
+
+- API-First Architecture
+- Row-Level Security via Supabase
+- Predictive ML Microservice
+
+#### Highlights at a glance
 
 | Area                                                                           | What you get                                    |
 | ------------------------------------------------------------------------------ | ----------------------------------------------- |
 | <img src="https://img.shields.io/badge/-Operations-0f172a" alt="Operations" /> | Shipment + inventory visibility from one place  |
 | <img src="https://img.shields.io/badge/-Risk-0f172a" alt="Risk" />             | Weather-aware checks and route-aware decisions  |
 | <img src="https://img.shields.io/badge/-Planning-0f172a" alt="Planning" />     | Demand forecast + delay probability predictions |
-| <img src="https://img.shields.io/badge/-Assistant-0f172a" alt="Assistant" />   | AI chat flow through a server-side API route    |
+| <img src="https://img.shields.io/badge/-Assistant-0f172a" alt="Assistant" />   | Copilot Logistics Assistant (Gemini-powered)    |
 
 ## Tech stack
 
-- **Frontend:** Next.js 16, React, TypeScript, Leaflet, Recharts
+- **Frontend:** Next.js App Router, React, TypeScript, Leaflet, Recharts
 - **ML service:** FastAPI, Pandas, Prophet
 - **Database:** Supabase (Postgres)
 - **Hosting:** Vercel (frontend), Render (ML service)
