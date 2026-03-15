@@ -170,6 +170,23 @@ const Icons = {
       <polyline points="12 6 12 12 16 14" />
     </svg>
   ),
+  Trash: (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 6h18" />
+      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+    </svg>
+  ),
 };
 
 function getDriverAndTransitDetails(shipment: any) {
@@ -506,6 +523,25 @@ export default function ShipmentManager() {
         .eq("id", shipmentId);
       if (error) throw error;
       fetchShipments();
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setProcessingId(null);
+    }
+  }
+
+  async function handleDeleteShipment(shipmentId: string) {
+    if (!confirm("Are you sure you want to remove this shipment?")) return;
+    setProcessingId(shipmentId);
+    try {
+      const { error } = await supabase
+        .from("shipments")
+        .delete()
+        .eq("id", shipmentId);
+      if (error) throw error;
+      
+      // refresh lists
+      await fetchShipments();
     } catch (err: any) {
       alert(err.message);
     } finally {
@@ -902,9 +938,19 @@ export default function ShipmentManager() {
                         <div className="bg-[#111827] rounded-3xl p-8 text-white flex flex-col border border-[#1F2937] shadow-sm mt-2 mb-2">
                           <div className="flex flex-col md:flex-row gap-10">
                             <div className="flex-1 space-y-4">
-                              <p className="text-xs font-semibold text-[#9CA3AF]">
-                                Driver Details
-                              </p>
+                              <div className="flex items-center justify-between">
+                                <p className="text-xs font-semibold text-[#9CA3AF]">
+                                  Driver Details
+                                </p>
+                                <button
+                                  onClick={() => handleDeleteShipment(s.id)}
+                                  disabled={processingId === s.id}
+                                  className="text-rose-400 hover:text-rose-300 text-[11px] font-semibold tracking-wider uppercase flex items-center gap-1.5 transition-colors disabled:opacity-50 bg-rose-500/10 px-2.5 py-1 rounded-lg border border-rose-500/20 active:scale-95"
+                                  title="Remove Shipment"
+                                >
+                                  {Icons.Trash} Remove
+                                </button>
+                              </div>
                               <div className="flex items-center gap-5">
                                 <div className="w-12 h-12 rounded-xl bg-[#1F2937] flex items-center justify-center text-[#9CA3AF] border border-[#374151]">
                                   {Icons.Pilot}
@@ -1107,9 +1153,18 @@ export default function ShipmentManager() {
                 <div className="animate-fade-in border-t border-[#1F2937] pt-5 mt-1">
                   <div className="flex flex-col gap-6">
                     <div className="space-y-4">
-                      <p className="text-xs font-semibold text-[#9CA3AF]">
-                        Driver Details
-                      </p>
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs font-semibold text-[#9CA3AF]">
+                          Driver Details
+                        </p>
+                        <button
+                          onClick={() => handleDeleteShipment(s.id)}
+                          disabled={processingId === s.id}
+                          className="text-rose-400 hover:text-rose-300 text-[10px] font-semibold tracking-wider uppercase flex items-center gap-1.5 transition-colors disabled:opacity-50 bg-rose-500/10 px-2.5 py-1 rounded-md border border-rose-500/20 active:scale-95"
+                        >
+                          {Icons.Trash} Remove
+                        </button>
+                      </div>
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-xl bg-[#1F2937] flex items-center justify-center text-[#9CA3AF] border border-[#374151] shrink-0">
                           {Icons.Pilot}

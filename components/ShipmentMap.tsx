@@ -219,6 +219,21 @@ export default function ShipmentMap({ focusId = null }: ShipmentMapProps) {
       }
     }
     loadShipments();
+
+    const channel = supabase
+      .channel("map-monitor")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "shipments" },
+        () => {
+          loadShipments();
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [sid]);
 
   return (
