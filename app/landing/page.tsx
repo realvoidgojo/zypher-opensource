@@ -306,7 +306,7 @@ export default function LandingPage() {
         </div>
 
         <div className="mt-6 bg-[#111827] border border-[#1F2937] rounded-lg p-4 max-w-lg font-mono text-sm overflow-x-auto">
-          <p className="text-[#6B7280] mb-1 whitespace-nowrap">
+          <p className="text-[#6B7280] mb-1 whitespace-nowrap text-[0.6rem] sm:text-sm">
             # clone and get started
           </p>
           <p className="text-[#D1D5DB] whitespace-nowrap text-[0.6rem] sm:text-sm">
@@ -339,7 +339,7 @@ export default function LandingPage() {
       <footer className="border-t border-[#1F2937] mt-8">
         <div className="max-w-5xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-[#6B7280]">
-            Zypher — Built with ☕ in 24 hours. Open source under MIT.
+            Zypher — Built with in 24 hours. Open source under MIT.
           </p>
           <div className="flex items-center gap-4">
             <a
